@@ -9,12 +9,11 @@ import styles from './styles';
 
 export default function Feedback( {route: { params: { title, text, textButton, navigate } }} ) {
 
-    // useEffect(() => {
-    //     BackHandler.addEventListener('hardwareBackPress', () => {
-    //        console.log('ok')
-    //        return true;
-    //     });
-    // });
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+           return true;
+        });
+    });
 
     return (
         <LinearGradient 

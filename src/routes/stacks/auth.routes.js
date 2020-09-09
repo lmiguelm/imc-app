@@ -13,7 +13,7 @@ const AuthRoutes = () => (
     <Navigator screenOptions={{ headerShown: false }} >
         <Screen name="Onboard" component={ Onboard } />
         <Screen name="Login" component={ Login } />
-        {/* <Screen name="ForgotPassword" component={ ForgotPassword } /> */}
+        <Screen name="ForgotPassword" component={ ForgotPassword } />
         <Screen name="Register" component={ Register } />
         <Screen name="Feedback" component={ Feedback } />
     </Navigator>

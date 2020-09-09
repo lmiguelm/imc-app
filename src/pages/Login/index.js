@@ -62,9 +62,7 @@ export default function Login() {
         setLoading(true);
         
         try {
-            await signIn(email, password, rememberMe);
-            setEmail('');
-            setPassword(''); 
+            await signIn(email, password, rememberMe); 
         } catch(error) {            
             setModal({
                 color: '#ff0000',
@@ -72,8 +70,9 @@ export default function Login() {
                 icon: 'error'
             });
             setShowModal(true);
-        } finally {
             setLoading(false);
+            setEmail('');
+            setPassword('');
         }
     }
 
