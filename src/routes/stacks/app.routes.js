@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Profile from '../../pages/Profile';
 import Landing from '../../pages/Landing';
 import Historic from '../../pages/Historic';
-import ImcTabs from './../ImcTabs';
+import ImcTabs from './../tabs/ImcTabs';
 import ChangePassword from '../../pages/ChangePassword';
 
 const { Navigator, Screen  } = createStackNavigator();

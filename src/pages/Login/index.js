@@ -20,7 +20,7 @@ export default function Login() {
 
     const { navigate } = useNavigation();
 
-    const { signIn } = useContext(AuthContext);
+    const { signIn, signInWhitoutAccount } = useContext(AuthContext);
 
     const [showPassword, setShowPassword] = useState(false);
     const [modal, setModal] = useState({});
@@ -76,20 +76,20 @@ export default function Login() {
         }
     }
 
-    function logginWithoutAccount() {
-        setModal({
-            color: '#6842C2',
-            text: 'Você entrará em nosso App sem conta, com isso não terá acesso a todas as funcionalidas disponíveis.',
-            icon: 'info-outline',
-            colorIcon: '#04d361',
-            button: {
-                backgroundColor: '#24EF7F',
-                navigate: () => navigate('Landing'),
-                textButton: 'Ok'
-            }
-        });
-        setShowModal(true);
-    }
+    // function logginWithoutAccount() {
+    //     setModal({
+    //         color: '#6842C2',
+    //         text: 'Você entrará em nosso App sem conta, com isso não terá acesso a todas as funcionalidas disponíveis.',
+    //         icon: 'info-outline',
+    //         colorIcon: '#04d361',
+    //         button: {
+    //             backgroundColor: '#24EF7F',
+    //             navigate: () => signInWhitoutAccount(),
+    //             textButton: 'Ok'
+    //         }
+    //     });
+    //     setShowModal(true);
+    // }
     
     return(
         <>
@@ -172,9 +172,9 @@ export default function Login() {
                            <Text style={ [styles.linkText, {marginBottom: 5, color: '#6A6180'}] }>Esqueci minha senha</Text>  
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={ logginWithoutAccount }>
+                        {/* <TouchableOpacity onPress={ logginWithoutAccount }>
                             <Text style={ [styles.linkText, {fontFamily: 'Roboto_700Bold'}] } >Entrar sem conta</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
 

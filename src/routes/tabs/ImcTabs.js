@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
 
-import Imc from '../pages/Imc';
-import About from '../pages/About';
+import Imc from '../../pages/Imc';
+import About from '../../pages/About';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
