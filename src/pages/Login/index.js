@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Keyboard, ActivityIndicator, BackHandler } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BorderlessButton, TouchableOpacity } from 'react-native-gesture-handler';
@@ -10,7 +10,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Modalize from '../../components/Modalize';
 
-import AuthContext from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 
 import { validateEmail } from '../../utils/email';
 
@@ -20,7 +20,7 @@ export default function Login() {
 
     const { navigate } = useNavigation();
 
-    const { signIn, signInWhitoutAccount } = useContext(AuthContext);
+    const { signIn } = useAuth();
 
     const [showPassword, setShowPassword] = useState(false);
     const [modal, setModal] = useState({});
@@ -44,9 +44,9 @@ export default function Login() {
 
     }, [email, password]);
 
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => true);
-    }, []);
+    // useEffect(() => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => true);
+    // }, []);
 
 
     function goToRegisterPage() {

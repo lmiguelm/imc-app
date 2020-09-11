@@ -4,7 +4,9 @@ import { AppLoading } from 'expo';
 import { Roboto_400Regular, Roboto_700Bold, Roboto_700Bold_Italic, useFonts } from '@expo-google-fonts/roboto';
 
 import Routes from './src/routes/stacks/index';
+
 import { AuthProvider } from './src/contexts/auth';
+import { ImcProvider } from './src/contexts/imc';
 
 export default function App() {
 
@@ -21,7 +23,9 @@ export default function App() {
       <>
         <StatusBar barStyle="light-content" backgroundColor="#6842C2" />
           <AuthProvider>
-            <Routes/>
+              <ImcProvider>
+                <Routes/>
+              </ImcProvider>
           </AuthProvider>
       </>
     );

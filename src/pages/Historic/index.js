@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, FlatList, Picker, RefreshControl, BackHandler } from 'react-native';
-import { BorderlessButton, RectButton, ScrollView } from 'react-native-gesture-handler';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Picker,BackHandler, ActivityIndicator, ListView } from 'react-native';
+import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,12 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 import { formatDate } from '../../utils/date';
 
 import api from '../../services/api';
+import { useImc } from '../../contexts/imc';
 
 import Header from '../../components/Header';
 import ImcItem from '../../components/historic/ImcItem';
 import Button from '../../components/Button';
 
 import styles from './styles'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 function wait(timeout) {
@@ -27,19 +29,25 @@ export default function Historic() {
 
     const { navigate } = useNavigation();
 
+    const { imcs, loadImcs } = useImc();
+
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);
-    const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(false);
     
-    const [imcs, setImcs] = useState([]);
+    // const [imcs, setImcs] = useState([]);
+    
 
     useEffect(() => {
-        api.get('imc').then(res => {
-            setImcs(res.data);
-        });
-    });
+        async function loadData() {
+            setLoading(true);
+            await loadImcs();
+            setLoading(false);
+        }
+        loadData();
+    }, []);
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', () => {
@@ -47,20 +55,6 @@ export default function Historic() {
             return;
         });
     }, []);
-
-    const onRefresh = useCallback( async () => {
-        setRefreshing(true);
-        await wait(2000);
-        //chamar api aqui ...
-        alert('Clima quente');
-        setRefreshing(false);
-    });
-
-    function onChange(event, selectedDate) {
-        const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate);
-    };
     
     function handleToggleFiltersVisible() {
         setIsFiltersVisible(!isFiltersVisible);
@@ -148,47 +142,42 @@ export default function Historic() {
 
             {/* Content */}
 
-            <ScrollView
-                refreshControl={
-                    <RefreshControl 
-                        colors={['#8257E5', '#04d361']} 
-                        refreshing={refreshing} 
-                        onRefresh={onRefresh} 
-                    />
-                }
-                style={{ marginTop: -40 }} 
-                contentContainerStyle={{
-                    paddingHorizontal: 16,
-                    paddingBottom: 16
-                }} 
-            >
-                {imcs.length == 0 ? (
-                    <FlatList 
-                        data={imcs}
-                        keyExtractor={item => item.id}
-                        renderItem={ ({ item }) => {
-                            return (
-                                <ImcItem item={item}/>
-                            );
-                        }}
-                    /> 
-                ) : (
-                    <View style={styles.noDatafoundContainer}>
-                        <Text style={styles.noDatafoundText}>Nenhum resultado encontrado :(</Text>
-                        <View style={styles.noDatafountButton}>
-                            <Button
-                                text="Calcular Imc"
-                                color="#04d361"
-                                enabled
-                                action={goToImcPage}
-                            />
+            {loading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#6842C2"/>
+                    <Text style={styles.textLoading}>Carregando conteúdo...</Text>
+                </View>
+            ): (
+                <SafeAreaView
+                    style={{ marginTop: -40, alignSelf: 'center', width: '90%', marginBottom: 20 }} 
+                >
+                    {imcs.length !== 0 ? (
+                        <FlatList 
+                            data={imcs}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={ ({ item }) => {
+                                return (
+                                    <ImcItem item={item}/>
+                                );
+                            }}
+                        /> 
+                    ) : (
+                        <View style={styles.noDatafoundContainer}>
+                            <Text style={styles.noDatafoundText}>Nenhum resultado encontrado :(</Text>
+                            <View style={styles.noDatafountButton}>
+                                <Button
+                                    text="Calcular Imc"
+                                    color="#04d361"
+                                    enabled
+                                    action={goToImcPage}
+                                />
+                            </View>
                         </View>
-                    </View>
-                )}
+                    )}
+                </SafeAreaView>
+            )}
 
-                
-
-            </ScrollView>
+            
 
         </LinearGradient>
     );

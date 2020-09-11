@@ -1,7 +1,9 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 
 import * as auth from '../services/auth';
+
+import api from '../services/api';
 
 const AuthContext = createContext({});
 
@@ -12,13 +14,15 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() =>{ 
         async function loadStorageData() {
-            const storageUser =  await AsyncStorage.getItem('@ImcAuth:user');
-            const storageToken = await AsyncStorage.getItem('@ImcAuth:token');
+            const storage = await AsyncStorage.multiGet(['@ImcAuth:user', '@ImcAuth:token']);
+            const storageUser = storage[0][1];
+            const storageToken = storage[1][1];
 
             if(storageToken && storageUser) {
                 setUser(JSON.parse(storageUser));
                 setSigned(true);
             }
+            api.defaults.headers.Authorization = storageToken;
         }
         loadStorageData();
     }, []);
@@ -29,6 +33,8 @@ export const AuthProvider = ({ children }) => {
 
         setUser(user);
         setSigned(true);
+
+        api.defaults.headers.Authorization = token;
 
         if(rememberMe) {
             await AsyncStorage.setItem('@ImcAuth:user', JSON.stringify(user));
@@ -50,4 +56,7 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export default AuthContext;
+export function useAuth() {
+    const context = useContext(AuthContext);
+    return context;
+}

@@ -1,23 +1,58 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, {useRef} from 'react';
+import { View, Text, Alert } from 'react-native';
 import { ProgressCircle  } from 'react-native-svg-charts';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import DeleteIcon from '../DeleteItem';
 
+import { useImc } from '../../../contexts/imc';
+
 import styles from './styles';
+
+
+
 
 export default function ImcItem({item: {id, height, weight, title, imc, color, created_date, user_id}}) {
 
-    function deleteItem(id) {
-       alert(id);
+    const { deleteImc } = useImc();
+
+    const swipeable = useRef(null);
+
+    function createButtonAlert(id) {
+        Alert.alert(
+            "Atenção",
+            "Tem certeza que deseja deletar este IMC?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                    onPress: () => {
+                        swipeable.current.close();
+                    }
+                },
+                { 
+                    text: "OK",
+                    onPress: () => handleDeleteImc() 
+                }
+            ],
+            { cancelable: false }
+        );
+    }
+
+    async function handleDeleteImc() {
+       try {
+            await deleteImc(id);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     return(
         <Swipeable
             renderLeftActions={() => <DeleteIcon/>}
-            onSwipeableLeftOpen={() => deleteItem(id)}
+            onSwipeableLeftOpen={createButtonAlert}  
+            ref={swipeable}
         >
             <View style={ styles.container }>
                 <View style={ styles.chart}>

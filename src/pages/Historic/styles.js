@@ -93,6 +93,18 @@ const styles = StyleSheet.create({
     noDatafountButton: {
         width: '80%',
         marginTop: 20
+    },
+    loadingContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center', 
+    },
+    textLoading: {
+        fontFamily: 'Roboto_700Bold',
+        fontSize: 15,
+        marginLeft: 15,
+        color: '#32264D'
     }
 
 });

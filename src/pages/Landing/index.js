@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, Image, BackHandler } from 'react-native';
 import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -6,7 +6,7 @@ import { MaterialIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 import Modalize from '../../components/Modalize';
-import AuthContext from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 
 import styles from './styles';
 
@@ -14,14 +14,10 @@ export default function Landing() {
 
     const { navigate } = useNavigation();
 
-    const { signed, signOut } = useContext(AuthContext);
+    const { signed, signOut } = useAuth();
 
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState({});
-
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => true);
-    }, []);
 
     function goToHistoricPage() {
         navigate('Historic');
