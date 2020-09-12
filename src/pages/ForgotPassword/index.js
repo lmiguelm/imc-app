@@ -14,12 +14,12 @@ export default function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [userId, setUserId] = useState('');
     
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            navigate('Login');
-            return;
-        });
-    }, []);
+    // useEffect(() => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => {
+    //         navigate('Login');
+    //         return;
+    //     });
+    // }, []);
 
 
     if(step === 1) {

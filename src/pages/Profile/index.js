@@ -32,12 +32,12 @@ export default function Profile() {
         fecthUser(1);
     }, []);
 
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            navigate('Landing');
-            return;
-        });
-    }, []);
+    // useEffect(() => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => {
+    //         navigate('Landing');
+    //         return;
+    //     });
+    // }, []);
 
 
     async function fecthUser(id) {

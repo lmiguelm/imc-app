@@ -26,12 +26,12 @@ export default function Register() {
         navigate('Login');
     }
 
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            navigate('Login');
-            return;
-        });
-    }, []);
+    // useEffect(() => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => {
+    //         navigate('Login');
+    //         return;
+    //     });
+    // }, []);
 
     async function submitForm() {   
         Keyboard.dismiss();     

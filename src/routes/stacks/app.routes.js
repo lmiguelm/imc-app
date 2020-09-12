@@ -6,6 +6,7 @@ import Landing from '../../pages/Landing';
 import Historic from '../../pages/Historic';
 import ImcTabs from './../tabs/ImcTabs';
 import ChangePassword from '../../pages/ChangePassword';
+import Feedback from '../../pages/Feedback';
 
 const { Navigator, Screen  } = createStackNavigator();
 
@@ -16,6 +17,7 @@ const AppRoutes = () => (
         <Screen name="ChangePassword" component={ ChangePassword }  />
         <Screen name="Historic" component={ Historic } />
         <Screen name="Imc" component={ ImcTabs } />
+        <Screen name="Feedback" component={ Feedback } />
     </Navigator>
 );
 

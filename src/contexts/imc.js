@@ -29,8 +29,26 @@ export const ImcProvider = ({ children }) => {
         });
     };
 
+    function createImc(imc) {
+        return new Promise( async (resolve, reject) => {
+            imc.user_id = id;
+            try {
+                await api.post('/imcs/new', {
+                    imc
+                });
+                resolve();
+            } catch(e) {
+                reject(e.response.data.message);
+            }
+        });
+    }
+
+    function filter(date, imc) {
+        console.log('ok');
+    }
+
     return(
-        <ImcContext.Provider value={{ deleteImc, loadImcs, imcs }}>
+        <ImcContext.Provider value={{ deleteImc, loadImcs, createImc, imcs }}>
             {children}
         </ImcContext.Provider>
     );

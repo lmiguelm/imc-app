@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Picker,BackHandler, ActivityIndicator, ListView } from 'react-native';
+import { View, Text, FlatList, Picker, ActivityIndicator } from 'react-native';
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign, Entypo } from '@expo/vector-icons';
@@ -49,12 +49,11 @@ export default function Historic() {
         loadData();
     }, []);
 
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            navigate('Landing');
-            return;
-        });
-    }, []);
+    // useEffect(() => {
+    //     BackHandler.addEventListener('hardwareBackPress', () => {
+    //         navigate('Landing');
+    //     });
+    // }, []);
     
     function handleToggleFiltersVisible() {
         setIsFiltersVisible(!isFiltersVisible);
@@ -148,8 +147,8 @@ export default function Historic() {
                     <Text style={styles.textLoading}>Carregando conteúdo...</Text>
                 </View>
             ): (
-                <SafeAreaView
-                    style={{ marginTop: -40, alignSelf: 'center', width: '90%', marginBottom: 20 }} 
+                <View
+                    style={{ flex: 1,marginTop: -40, alignSelf: 'center', width: '90%', marginBottom: 20 }} 
                 >
                     {imcs.length !== 0 ? (
                         <FlatList 
@@ -174,11 +173,8 @@ export default function Historic() {
                             </View>
                         </View>
                     )}
-                </SafeAreaView>
+                </View>
             )}
-
-            
-
         </LinearGradient>
     );
 }
