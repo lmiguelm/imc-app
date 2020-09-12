@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, ActivityIndicator, BackHandler} from 'react-native';
 import { TouchableOpacity, ScrollView, BorderlessButton } from 'react-native-gesture-handler';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -6,31 +6,30 @@ import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-ic
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import api from '../../services/api';
-
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Modalize from '../../components/Modalize';
+import { validateEmail } from '../../utils/email';
 
 import logo from '../../assets/logo/imc.png';
 import styles from './styles';
+
+import { useAuth } from '../../contexts/auth';
 
 export default function Profile() {
 
     const {navigate} = useNavigation();
 
+    const { user, editUser } = useAuth();
+
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState({});
     const [loading, setLoading] = useState(false);
-
-    const [user, setUser] = useState({});
-
-    useEffect(() => {
-        fecthUser(1);
-    }, []);
+    const [userData, setUserData] = useState(user);
+    const [enableButton, setEnableButton] = useState(false);
 
     // useEffect(() => {
     //     BackHandler.addEventListener('hardwareBackPress', () => {
@@ -40,14 +39,13 @@ export default function Profile() {
     // }, []);
 
 
-    async function fecthUser(id) {
-        try {
-            const {data} = await api.get(`/users/${id}`);
-            setUser(data);
-        } catch (e) {
-            console.log(e);
+    useEffect(() => {
+        if(validateEmail(userData.email) && userData.last_name.length >= 5 && userData.name.length >= 5 ) {
+            setEnableButton(true);
+        } else {
+            setEnableButton(false);
         }
-    }
+    }, [userData]);
 
     async function getPermissionAsync() {
        await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -65,7 +63,7 @@ export default function Profile() {
             });
 
             if (!result.cancelled && result.type == 'image') {
-                setUser({...user, avatar: result.uri});
+                setUserData({...user, avatar: result.uri});
                 setModal({
                     color: '#04D361',
                     text: 'Imagem alterada com sucesso.',
@@ -94,8 +92,28 @@ export default function Profile() {
         }
     }
 
-    function submitForm() {
-       console.log(user);
+    async function handleEditData() {
+        setLoading(true); 
+        try {
+            await editUser(userData);
+            setLoading(false);
+            navigate('Feedback', {
+                title: 'Sucesso',
+                text: `Seus dados foram atualizados com sucesso!`,
+                textButton: 'Meu Perfil',
+                navigate: () => navigate('Profile') 
+            });
+
+        } catch(e) {
+            setModal({
+                color: '#ff0000',
+                text: e,
+                icon: 'error',
+                colorIcon: '#fff',
+            });
+            setShowModal(true);
+            setLoading(false);
+        } 
     }
 
     function goToLandingPage() {
@@ -130,7 +148,7 @@ export default function Profile() {
                 <View style={ styles.pictureContainer }>  
                     <Image 
                         style={styles.picture} 
-                        source={{uri: user.avatar}}
+                        source={{uri: userData.avatar}}
                     >
                     </Image>
 
@@ -138,7 +156,7 @@ export default function Profile() {
                         <MaterialCommunityIcons onPress={ _pickImage } name="camera-outline" style={styles.iconCam} size={30} color="#fff" />
                     </View>
                     
-                    <Text style={styles.name}> Miguel</Text>
+                    <Text style={styles.name}> {user.name}</Text>
                 </View>
 
                 <LinearGradient 
@@ -168,18 +186,18 @@ export default function Profile() {
                             <Text style={styles.label}>Nome</Text>
                             <Input 
                                 placeholder="Nome"
-                                value={user.name}
+                                value={userData.name}
                                 onChangeText={name => {
-                                    setUser({...user, name});
+                                    setUserData({...userData, name});
                                 }}
                             />
 
                             <Text style={styles.label}>Sobrenome</Text>
                             <Input
                                 placeholder="Sobrenome"
-                                value={user.lastName}
-                                onChangeText={lastName => {
-                                    setUser({...user, lastName});
+                                value={userData.last_name}
+                                onChangeText={last_name => {
+                                    setUserData({...userData, last_name});
                                 }}
                             />
 
@@ -188,9 +206,9 @@ export default function Profile() {
                                 placeholder="E-mail"
                                 autoComplete="email"
                                 keyboardType="email-address"
-                                value={user.email}
+                                value={userData.email}
                                 onChangeText={email => {
-                                    setUser({...user, email});
+                                    setUserData({...userData, email});
                                 }}
                             />
 
@@ -203,8 +221,8 @@ export default function Profile() {
                                     <Button
                                         text="Salvar alterações"
                                         color="#04D361"
-                                        enabled
-                                        action={submitForm}
+                                        enabled={enableButton}
+                                        action={handleEditData}
                                     />
                                ): (
                                     <Button

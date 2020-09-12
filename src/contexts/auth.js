@@ -48,9 +48,36 @@ export const AuthProvider = ({ children }) => {
         setSigned(false);
     }
 
+    function editUser(newData) {
+        return new Promise( async (resolve, reject) => {
+            try {
+                await api.put(`/users/${user.id}`, { user: newData });
+                await AsyncStorage.setItem('@ImcAuth:user', JSON.stringify(newData));
+                setUser(newData);
+                resolve();
+            } catch (e) {
+                reject(e.response.data.message);
+            }
+        });
+    }
+
+    function changePassword(oldPassword, newPassword) {
+        return new Promise( async (resolve, reject) => {
+            try {
+                await api.post(`/auth/${user.id}/changePassword`,{
+                    oldPassword,
+                    newPassword
+                });
+                resolve();
+            } catch (e) {
+                reject(e.response.data.message);
+            }
+        });
+    }
+
     return(
         // !!user == Boolean(user);
-        <AuthContext.Provider value={{ signed, user, signIn, signOut }}>  
+        <AuthContext.Provider value={{ editUser, changePassword, signed, user, signIn, signOut }}>  
             {children}
         </AuthContext.Provider>
     );

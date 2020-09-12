@@ -8,12 +8,16 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Modalize from '../../components/Modalize';
 
+import { useAuth } from '../../contexts/auth';
+
 import styles from './styles';
 import logo from '../../assets/logo/imc.png';
 
 export default function ChangePassword() {
 
     const { navigate } = useNavigation();
+
+    const { changePassword } = useAuth();
 
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -29,7 +33,7 @@ export default function ChangePassword() {
 
 
     useEffect(() => {
-        if(oldPassword.length >= 5 && newPassword.length >= 5 && confimPassword.length >= 5) {
+        if(oldPassword.length >= 5 && newPassword.length >= 5 && confimPassword.length >= 5 && newPassword === confimPassword ) {
             setEnableButton(true);
         } else {
             setEnableButton(false);
@@ -40,31 +44,27 @@ export default function ChangePassword() {
         navigate('Profile');
     }
 
-    function submitForm() {
+    async function handleChangePassword() {
         Keyboard.dismiss();
-        // buscar a senha atual na api ... 
-
         setLoading(true);
-
-        setTimeout(() => {
+        try {
+            await changePassword(oldPassword, newPassword);
             setLoading(false);
-        }, 5000);
-
-        // if(newPassword === confimPassword) {
-        //     navigate('Feedback', {
-        //         title: 'Senha alterada com sucesso!',
-        //         text: 'Sua nova senha já está disponível. :)',
-        //         textButton: 'Voltar para perfil',
-        //         navigate: () => navigate('Profile')
-        //     });        
-        // } else {
-        //     setModal({
-        //         color: '#ff0000',
-        //         text: 'As senhas devem ser iguais.',
-        //         icon: 'error'
-        //     });
-        //     setShowModal(true);
-        // }
+            navigate('Feedback', {
+                title: 'Senha alterada com sucesso!',
+                text: 'Sua nova senha já está disponível. :)',
+                textButton: 'Voltar para perfil',
+                navigate: () => navigate('Profile')
+            });      
+        } catch (e) {
+            setLoading(false);
+            setModal({
+                color: '#ff0000',
+                text: e,
+                icon: 'error'
+            });
+            setShowModal(true);
+        }
     }
 
     return(
@@ -151,7 +151,7 @@ export default function ChangePassword() {
                             text="Confirmar"
                             color="#04d361"
                             enabled={enableButton}
-                            action={submitForm}
+                            action={handleChangePassword}
                         />
                     ) : (
                         <Button enabled={false}>
