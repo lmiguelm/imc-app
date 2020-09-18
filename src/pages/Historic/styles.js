@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 16,
         marginTop: 4,
+        width: '100%',
         marginBottom: 16,
     },
     inputGroup: {

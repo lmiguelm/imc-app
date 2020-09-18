@@ -28,7 +28,6 @@ export default function Historic() {
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');  
-    const [rememberMe, setRememberMe] = useState(false);  
 
     useEffect(() => { 
         async function getImcs() {
@@ -99,7 +98,7 @@ export default function Historic() {
                     <View style={ styles.searchForm }>
                         <Text style={ styles.label }>Qual a data?</Text>
                         <View style={styles.pickerContainer}>
-                            <RectButton onPress={() => setShow(true)} style={ [styles.input, { width: '90%' }] } >
+                            <RectButton onPress={() => setShow(true)} style={ styles.input } >
                                 <View style={ styles.inputDate }>
                                     <Text style={ styles.inputDateText }>
                                         { formatDate(date) }
@@ -107,20 +106,6 @@ export default function Historic() {
                                     <AntDesign style={{ paddingRight: 10}} name="calendar" size={24} color="#a787f5" />
                                 </View>
                             </RectButton>
-                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 5 }} onPress={() => setRememberMe(!rememberMe)}>
-                        
-                                {!rememberMe ? (
-                                    <>
-                                        <AntDesign name="checkcircleo" size={25} color="#6A6180" />
-                                    </>
-                                ):(
-                                    <>
-                                        <AntDesign name="checkcircle" size={25} color="#774DD6" />
-                                    </>
-                                )}
-                                
-                            
-                            </TouchableOpacity>
                         </View>
 
                         {show && (

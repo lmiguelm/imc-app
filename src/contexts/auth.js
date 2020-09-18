@@ -19,10 +19,18 @@ export const AuthProvider = ({ children }) => {
             const storageToken = storage[1][1];
 
             if(storageToken && storageUser) {
-                setUser(JSON.parse(storageUser));
-                setSigned(true);
+                // verificando se o token ainda é valido
+                try {
+                    await api.post('/auth/authenticateToken', { token: storageToken});
+
+                    setUser(JSON.parse(storageUser));
+                    setSigned(true);
+                    api.defaults.headers.Authorization = storageToken;
+                } catch(e) {
+                    setUser({});
+                    setSigned(false);
+                }
             }
-            api.defaults.headers.Authorization = storageToken;
         }
         loadStorageData();
     }, []);
