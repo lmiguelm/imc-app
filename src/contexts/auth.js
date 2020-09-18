@@ -11,9 +11,11 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState({});
     const [signed, setSigned] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() =>{ 
         async function loadStorageData() {
+            setLoading(true);
             const storage = await AsyncStorage.multiGet(['@ImcAuth:user', '@ImcAuth:token']);
             const storageUser = storage[0][1];
             const storageToken = storage[1][1];
@@ -29,6 +31,8 @@ export const AuthProvider = ({ children }) => {
                 } catch(e) {
                     setUser({});
                     setSigned(false);
+                } finally {
+                    setLoading(false);
                 }
             }
         }
@@ -105,7 +109,7 @@ export const AuthProvider = ({ children }) => {
 
     return(
         // !!user == Boolean(user);
-        <AuthContext.Provider value={{ changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
+        <AuthContext.Provider value={{ loading, changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
             {children}
         </AuthContext.Provider>
     );

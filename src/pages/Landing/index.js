@@ -75,7 +75,7 @@ export default function Landing() {
                 <Image style={ styles.banner } source={ require('../../assets/landing/batimento-cardiaco.png')} />
             
                 <Text style={ styles.title}>
-                    Seja bem-vindo, {'\n'}
+                    Olá, {user.name}. {'\n'}
                     <Text style={ styles.titleBold }>O que deseja fazer? </Text>
                 </Text>
 

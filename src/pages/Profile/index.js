@@ -75,7 +75,7 @@ export default function Profile() {
             } else if(!result.cancelled && result.type != 'image') {
                 setModal({
                     color: '#ff0000',
-                    text: 'Imagem inválida. Tente novamente.',
+                    text: 'Imagem inválida.',
                     icon: 'error',
                     colorIcon: '#fff',
                 });
