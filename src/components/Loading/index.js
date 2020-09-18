@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 
 import styles from './styles';
 
-export default function Loading() {
+export default function Loading({ title }) {
     return(
         <LinearGradient 
                 colors={['#6842C2', '#774DD6', '#8257E5']}
@@ -20,7 +20,7 @@ export default function Loading() {
                     }}
                     loop
                 />
-                <Text style={ styles.text }>Carregando...</Text>
+                <Text style={ styles.text }>{title}</Text>
         </LinearGradient>
     );
 }

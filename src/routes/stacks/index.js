@@ -12,7 +12,7 @@ const Routes = () => {
     const { signed, loading } = useAuth();
     
     if(loading) {
-        return <Loading/>
+        return <Loading title="Carregando..."/>
     } else {
         return(
             <NavigationContainer>

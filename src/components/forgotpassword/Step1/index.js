@@ -9,6 +9,7 @@ import LottieView from 'lottie-react-native';
 import Input from '../../Input';
 import Button from '../../Button';
 import Modalize from '../../Modalize';
+import Loading from '../../Loading';
 
 import { validateEmail } from '../../../utils/email';
 import api from '../../../services/api';
@@ -47,83 +48,77 @@ export default function Step1({callback}) {
             });
             callback(2, email);
         } catch (e) {
+            setLoading(false);
             setModal({
                 color: '#ff0000',
                 text: e.response.data.message,
                 icon: 'error'
             });
             setShowModal(true);
-        } finally {
-            setLoading(false);
         }
-        
-
     }
 
-    return (
-        <>
-            <KeyboardAvoidingView style={ styles.container } behavior="position" >
-                <LinearGradient colors={['#6842C2', '#774DD6', '#8257E5']} style={ styles.header }>
-                    <LottieView
-                        style={{
-                            width: 250,
-                            height: 250,
-                        }}
-                        source={require('../../../assets/lottie/4565-heartbeat-medical.json')}
-                        autoPlay
-                        loop={false}
-                        speed={0.4}
-                    />
-                </LinearGradient>
+    if(loading) {
+        return <Loading title="Enviando e-mail..."/>
+    } else {
+        return (
+            <>
+                <KeyboardAvoidingView style={ styles.container } behavior="position" >
+                    <LinearGradient colors={['#6842C2', '#774DD6', '#8257E5']} style={ styles.header }>
+                        <LottieView
+                            style={{
+                                width: 250,
+                                height: 250,
+                            }}
+                            source={require('../../../assets/lottie/4565-heartbeat-medical.json')}
+                            autoPlay
+                            loop={false}
+                            speed={0.4}
+                        />
+                    </LinearGradient>
 
-                <View style={ styles.infoContainer }>
-                    <BorderlessButton onPress={ goToLoginPage }>
-                        <Ionicons  name="md-arrow-round-back" size={24} color="#32264D" />
-                    </BorderlessButton>
+                    <View style={ styles.infoContainer }>
+                        <BorderlessButton onPress={ goToLoginPage }>
+                            <Ionicons  name="md-arrow-round-back" size={24} color="#32264D" />
+                        </BorderlessButton>
 
-                    <Text style={ styles.title }>
-                        Esqueceu sua senha ?
-                    </Text>
+                        <Text style={ styles.title }>
+                            Esqueceu sua senha ?
+                        </Text>
 
-                    <Text style={ styles.text }>
-                        Relaxa, vamos dar um jeito nisso.
-                    </Text>
-                </View>
+                        <Text style={ styles.text }>
+                            Relaxa, vamos dar um jeito nisso.
+                        </Text>
+                    </View>
 
-                <View style={ styles.inputGroup}>   
-                    <Input 
-                        placeholder="E-mail"
-                        autoComplete="email"
-                        keyboardType="email-address"
-                        value={ email }
-                        onChangeText={ value => setEmail(value) }
-                        icon={
-                            <Entypo name="mail" size={20} color="#c1bccc" />
-                        }
-                    />
-                    
-                    {!loading ? (
+                    <View style={ styles.inputGroup}>   
+                        <Input 
+                            placeholder="E-mail"
+                            autoComplete="email"
+                            keyboardType="email-address"
+                            value={ email }
+                            onChangeText={ value => setEmail(value) }
+                            icon={
+                                <Entypo name="mail" size={20} color="#c1bccc" />
+                            }
+                        />
+                        
                         <Button
                             text="Próximo"
                             color="#04d361"
                             action={ submitForm }
                             enabled={ enableButton }
-                        />
-                    ) : (
-                        <Button enabled={false}>
-                             <ActivityIndicator  size="large" color="#6842C2" />
-                        </Button>
-                    )}
-                    
-                </View>
+                        />   
+                    </View>
 
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
 
-            <Modalize
-                open={ showModal }
-                callback={ res => setShowModal(res) } 
-                modal={ modal }
-            />
-        </>
-    );
+                <Modalize
+                    open={ showModal }
+                    callback={ res => setShowModal(res) } 
+                    modal={ modal }
+                />
+            </>
+        );
+    }
 }

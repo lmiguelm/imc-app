@@ -31,10 +31,9 @@ export const AuthProvider = ({ children }) => {
                 } catch(e) {
                     setUser({});
                     setSigned(false);
-                } finally {
-                    setLoading(false);
-                }
+                } 
             }
+            setLoading(false);
         }
         loadStorageData();
     }, []);
@@ -107,9 +106,23 @@ export const AuthProvider = ({ children }) => {
         });
     }
 
+    function deleteUser() {
+        return new Promise( async (resolve, reject) => {
+            try {
+                await api.delete(`/users/${user.id}`);
+                await AsyncStorage.clear();
+                setSigned(false);
+                setUser({});
+                resolve();
+            } catch(e) {
+                reject(e.response.data.message);
+            }
+        });
+    }
+
     return(
         // !!user == Boolean(user);
-        <AuthContext.Provider value={{ loading, changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
+        <AuthContext.Provider value={{ deleteUser, loading, changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
             {children}
         </AuthContext.Provider>
     );

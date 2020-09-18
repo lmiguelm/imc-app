@@ -132,6 +132,10 @@ export default function Profile() {
         } 
     }
 
+    function goToDeleteAcconuntPage() {
+        navigate('DeleteAccount');
+    }
+
     function goToLandingPage() {
         navigate('Landing');
     }
@@ -192,6 +196,12 @@ export default function Profile() {
                             <TouchableOpacity onPress={goToChangePassPage}>
                                 <Text style={styles.linkText}>
                                     Alterar Senha
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={goToDeleteAcconuntPage}>
+                                <Text style={[styles.linkText, { color: 'red' }]}>
+                                   Excluir conta
                                 </Text>
                             </TouchableOpacity>
                             

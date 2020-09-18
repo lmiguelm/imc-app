@@ -53,17 +53,14 @@ export default function Step2({callback, userId}) {
                 navigate: () => navigate('Login')
             });
         } catch (e) {
+            setLoading(false);
             setModal({
                 color: '#ff0000',
                 text: e.response.data.message,
                 icon: 'error'
             });
             setShowModal(true);
-        } finally {
-            setLoading(false);
-        }
-
-        
+        } 
     }
 
     function goBack() {

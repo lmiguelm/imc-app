@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_700Bold',
         color: '#8257E5',
         fontSize: 15,
-        marginBottom: 15
+        marginBottom: 10
     }
     
 });

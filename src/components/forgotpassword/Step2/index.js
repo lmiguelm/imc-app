@@ -73,15 +73,14 @@ export default function Step2({email, callback}) {
             });
             callback(3, user.data.id);
         } catch (e) {
+            setLoading(false);
             setModal({
                 color: '#ff0000',
                 text: e.response.data.message,
                 icon: 'error'
             });
             setShowModal(true);
-        } finally {
-            setLoading(false);
-        }
+        } 
     }
 
     function goBack() {
