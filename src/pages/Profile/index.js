@@ -23,7 +23,7 @@ export default function Profile() {
 
     const {navigate} = useNavigation();
 
-    const { user, editUser } = useAuth();
+    const { user, editUser, changeAvatar } = useAuth();
 
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState({});
@@ -51,6 +51,7 @@ export default function Profile() {
        await Permissions.askAsync(Permissions.CAMERA_ROLL);
     }
 
+
     async function _pickImage() {
         await getPermissionAsync();
 
@@ -58,12 +59,12 @@ export default function Profile() {
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
                 allowsEditing: true,
-                aspect: [4, 4],
+                aspect: [8, 8],
                 quality: 1,
             });
-
             if (!result.cancelled && result.type == 'image') {
-                setUserData({...user, avatar: result.uri});
+                handleChangeAvatar(result);
+                setUserData({...userData, avatar_url: result.uri});
                 setModal({
                     color: '#04D361',
                     text: 'Imagem alterada com sucesso.',
@@ -81,10 +82,25 @@ export default function Profile() {
                 setShowModal(true);
             }
             
-        } catch (E) {
+        } catch (e) {
+            console.log(e);
             setModal({
                 color: '#ff0000',
                 text: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+                icon: 'error',
+                colorIcon: '#fff',
+            });
+            setShowModal(true);
+        }
+    }
+
+    async function handleChangeAvatar(avatar) {
+        try {
+            await changeAvatar(avatar);
+        } catch(e) {
+            setModal({
+                color: '#ff0000',
+                text: e,
                 icon: 'error',
                 colorIcon: '#fff',
             });
@@ -140,7 +156,7 @@ export default function Profile() {
                             Meu Perfil
                         </Text>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={goToLandingPage}>
                             <Image source={logo} resizeMode="contain" />
                         </TouchableOpacity>
                 </View>
@@ -148,7 +164,7 @@ export default function Profile() {
                 <View style={ styles.pictureContainer }>  
                     <Image 
                         style={styles.picture} 
-                        source={{uri: userData.avatar}}
+                        source={{uri: userData.avatar_url}}
                     >
                     </Image>
 

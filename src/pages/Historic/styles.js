@@ -105,6 +105,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 15,
         color: '#32264D'
+    },
+    pickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 
 });

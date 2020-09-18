@@ -13,7 +13,7 @@ import styles from './styles';
 
 
 
-export default function ImcItem({item: {id, height, weight, title, imc, color, created_date, user_id}}) {
+export default function ImcItem({item: {id, height, weight, title, imc, color, created_at, user_id}}) {
 
     const { deleteImc } = useImc();
 
@@ -102,7 +102,7 @@ export default function ImcItem({item: {id, height, weight, title, imc, color, c
                     <View style={ styles.footer}>
                         <AntDesign name="calendar" size={20} color={ color || '#04D361' } />
                         <Text style={ styles.footerText}>
-                            {created_date}
+                            {created_at}
                         </Text>
                     </View>
                 </View>

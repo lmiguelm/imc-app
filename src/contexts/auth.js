@@ -75,9 +75,29 @@ export const AuthProvider = ({ children }) => {
         });
     }
 
+    function changeAvatar(avatar) {
+        return new Promise( async (resolve, reject) => {
+           const data = new FormData();
+           data.append('avatar', {
+               uri: avatar.uri,
+               type: 'image/jpeg',
+               name: `ID_${user.id}_Profile.jpg`
+           });
+
+            try {
+                await api.post(`/users/${user.id}/avatar`, data);
+                await AsyncStorage.setItem('@ImcAuth:user', JSON.stringify({...user, avatar_url: avatar.uri}));
+                setUser({...user, avatar_url: avatar.uri });
+                resolve();
+            } catch(e) {
+                reject(e.response.data.message);
+            }
+        });
+    }
+
     return(
         // !!user == Boolean(user);
-        <AuthContext.Provider value={{ editUser, changePassword, signed, user, signIn, signOut }}>  
+        <AuthContext.Provider value={{ changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
             {children}
         </AuthContext.Provider>
     );

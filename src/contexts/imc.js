@@ -12,8 +12,12 @@ export const ImcProvider = ({ children }) => {
     const [imcs, setImcs] = useState([]);
     
     async function loadImcs() {
-        const res = await api.get(`/imcs/${id}`);
-        setImcs(res.data);
+        try {
+            const res = await api.get(`/imcs/${id}`);
+            setImcs(res.data);
+        } catch (e) {
+            setImcs([]);
+        }  
     };
 
     function deleteImc(id) {
@@ -43,12 +47,17 @@ export const ImcProvider = ({ children }) => {
         });
     }
 
-    function filter(date, imc) {
-        console.log('ok');
+    async function filter(date, imc) {
+        try {   
+            const res = await api.get(`/imcs/${id}/filter?date=${date}&imc=${imc}`);
+            setImcs(res.data);
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     return(
-        <ImcContext.Provider value={{ deleteImc, loadImcs, createImc, imcs }}>
+        <ImcContext.Provider value={{ filter, deleteImc, loadImcs, createImc, imcs }}>
             {children}
         </ImcContext.Provider>
     );

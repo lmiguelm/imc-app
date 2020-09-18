@@ -39,7 +39,7 @@ export default function Register() {
             await api.post('/users/new', {
                 user: {
                     name,
-                    lastName,
+                    last_name: lastName,
                     email,
                     password
                 }

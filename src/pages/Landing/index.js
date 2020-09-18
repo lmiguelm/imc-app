@@ -14,7 +14,7 @@ export default function Landing() {
 
     const { navigate } = useNavigation();
 
-    const { signed, signOut } = useAuth();
+    const { signed, signOut, user } = useAuth();
 
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState({});
@@ -61,9 +61,9 @@ export default function Landing() {
                         <TouchableOpacity onPress={gotToProfilePage} style={styles.profile}>
                             <Image 
                                 style={styles.picture} 
-                                source={{ uri: 'https://avatars3.githubusercontent.com/u/47677312?v=4' }}
+                                source={{ uri: user.avatar_url }}
                             />
-                            <Text style={styles.name}>Luis Miguel</Text>
+                            <Text style={styles.name}>{user.name}</Text>
                         </TouchableOpacity>
                         
                         <TouchableOpacity style={styles.logout} onPress={handleSignOut}>

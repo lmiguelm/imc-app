@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Picker, ActivityIndicator } from 'react-native';
-import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
+import { View, Text, FlatList, ActivityIndicator, Picker } from 'react-native';
+import { BorderlessButton, RectButton, TouchableOpacity } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 import { formatDate } from '../../utils/date';
 
-import api from '../../services/api';
 import { useImc } from '../../contexts/imc';
 
 import Header from '../../components/Header';
@@ -16,38 +15,48 @@ import ImcItem from '../../components/historic/ImcItem';
 import Button from '../../components/Button';
 
 import styles from './styles'
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-
-function wait(timeout) {
-    return new Promise(resolve => {
-        setTimeout(resolve, timeout);
-    });
-}
 
 export default function Historic() {
 
     const { navigate } = useNavigation();
 
-    const { imcs, loadImcs } = useImc();
+    const { imcs, loadImcs, filter } = useImc();
 
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);
     const [loading, setLoading] = useState(false);
-    
-    // const [imcs, setImcs] = useState([]);
-    
+    const [selectedValue, setSelectedValue] = useState('');  
+    const [rememberMe, setRememberMe] = useState(false);  
 
-    useEffect(() => {
-        async function loadData() {
+    useEffect(() => { 
+        async function getImcs() {
             setLoading(true);
             await loadImcs();
             setLoading(false);
-        }
-        loadData();
+        }  
+        getImcs();
     }, []);
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+    };
+
+
+    async function handleFilterImc() {
+        setLoading(true);
+        await filter(formatDate(date), selectedValue);
+        setLoading(false);
+    }
+
+    async function handleRemoveFilter() {
+        setLoading(true);
+        await loadImcs();
+        setLoading(false);
+    }
 
     // useEffect(() => {
     //     BackHandler.addEventListener('hardwareBackPress', () => {
@@ -89,14 +98,30 @@ export default function Historic() {
                { isFiltersVisible && (
                     <View style={ styles.searchForm }>
                         <Text style={ styles.label }>Qual a data?</Text>
-                        <RectButton onPress={() => setShow(true)} style={ styles.input } >
-                            <View style={ styles.inputDate }>
-                                <Text style={ styles.inputDateText }>
-                                    { formatDate(date) }
-                                </Text>
-                                <AntDesign style={{ paddingRight: 10}} name="calendar" size={24} color="#a787f5" />
-                            </View>
-                        </RectButton>
+                        <View style={styles.pickerContainer}>
+                            <RectButton onPress={() => setShow(true)} style={ [styles.input, { width: '90%' }] } >
+                                <View style={ styles.inputDate }>
+                                    <Text style={ styles.inputDateText }>
+                                        { formatDate(date) }
+                                    </Text>
+                                    <AntDesign style={{ paddingRight: 10}} name="calendar" size={24} color="#a787f5" />
+                                </View>
+                            </RectButton>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 5 }} onPress={() => setRememberMe(!rememberMe)}>
+                        
+                                {!rememberMe ? (
+                                    <>
+                                        <AntDesign name="checkcircleo" size={25} color="#6A6180" />
+                                    </>
+                                ):(
+                                    <>
+                                        <AntDesign name="checkcircle" size={25} color="#774DD6" />
+                                    </>
+                                )}
+                                
+                            
+                            </TouchableOpacity>
+                        </View>
 
                         {show && (
                             <DateTimePicker
@@ -117,22 +142,31 @@ export default function Historic() {
                                     color: '#222',
                                     fontSize: 16,
                                  }}
-                                // selectedValue={selectedValue}
-                                
-                                // onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                selectedValue={selectedValue}
+                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                             >
-                                <Picker.Item label="Magreza" value="Magreza" />
-                                <Picker.Item label="Normal" value="Normal" />
-                                <Picker.Item label="Sobrepeso" value="Sobrepeso" />
-                                <Picker.Item label="Obesidade" value="Obesidade" />
-                                <Picker.Item label="Obesidade Grave" value="Obesidade Grave" />
+                                <Picker.Item label="Selecione" selectedValue value="" />
+                                <Picker.Item label="Muito abaixo do peso" value="Muito abaixo do peso" />
+                                <Picker.Item label="Abaixo do peso" value="Abaixo do peso" />
+                                <Picker.Item label="Peso normal" value="Peso normal" />
+                                <Picker.Item label="Acima do peso" value="Acima do peso" />
+                                <Picker.Item label="Obesidade I" value="Obesidade I" />
+                                <Picker.Item label="Obesidade II (Severa)" value="Obesidade II (Severa)" />
+                                <Picker.Item label="Obesidade III (Mórbida)" value="Obesidade III (Mórbida)" />
                             </Picker>
                         </View>
 
-                        <RectButton onPress={() => console.log('ok')} style={styles.submitButton}>
+                        <RectButton onPress={handleFilterImc} style={styles.submitButton}>
                             <Text style={styles.submitButtonText}>
                                 <Entypo name="magnifying-glass" size={20}/>{' '}
-                                Buscar
+                                Filtrar
+                            </Text>
+                        </RectButton>
+
+                        <RectButton onPress={handleRemoveFilter} style={[styles.submitButton, { backgroundColor: 'red', marginTop: 10 }]}>
+                            <Text style={styles.submitButtonText}>
+                                <MaterialCommunityIcons name="filter-remove" size={20}/>{' '}
+                                Remover
                             </Text>
                         </RectButton>
                     </View>
