@@ -41,12 +41,14 @@ export default function Feedback( {route: { params: { title, text, textButton, n
             </View>
     
             <View style={ styles.buttonContainer }>
-                <Button
-                    text={ textButton }
-                    color="#04D361"
-                    enabled
-                    action={ navigate }
-                />
+                {textButton && (
+                    <Button
+                        text={ textButton }
+                        color="#04D361"
+                        enabled
+                        action={ navigate }
+                    />
+                )}
             </View>
 
         </LinearGradient>

@@ -48,8 +48,8 @@ export default function DeleteAccount() {
             navigate('Feedback', {
                 title: 'Conta removida com suceeso!',
                 text: `Sua conta foi removida. Caso queria voltar atrás é só criar uma nova :)`,
-                textButton: 'Ok',
-                navigate: () => navigate('Login') 
+                // textButton: 'Ok',
+                // navigate: () => navigate('Profile') 
             });
         } catch (e) {
             setLoading(false);

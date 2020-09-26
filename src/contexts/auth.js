@@ -120,9 +120,40 @@ export const AuthProvider = ({ children }) => {
         });
     }
 
+    function newUser(name, last_name, email, password) {
+        return new Promise( async (resolve, reject) => {
+            try {
+                const res = await api.post('/users/new', {
+                    user: {
+                        name,
+                        last_name,
+                        email,
+                        password,
+                    }
+                });
+
+                const user = res.data;
+                console.log(user);
+                const token = res.headers.authorization;
+                console.log(token);
+
+                setUser(user);
+                setSigned(true);
+
+                api.defaults.headers.Authorization = token;
+
+                await AsyncStorage.setItem('@ImcAuth:user', JSON.stringify(user));
+                await AsyncStorage.setItem('@ImcAuth:token', token);
+                resolve();
+            } catch (e) {
+                reject(e.response.data.message);
+            }
+        });
+    }
+
     return(
         // !!user == Boolean(user);
-        <AuthContext.Provider value={{ deleteUser, loading, changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
+        <AuthContext.Provider value={{ newUser, deleteUser, loading, changeAvatar, editUser, changePassword, signed, user, signIn, signOut }}>  
             {children}
         </AuthContext.Provider>
     );
