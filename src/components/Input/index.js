@@ -3,7 +3,7 @@ import { View, TextInput } from 'react-native';
 
 import styles from './styles';
 
-export default function Input({ maxLength, keyboardType, icon, placeholder, autoComplete, color, secureTextEntry, value, onChangeText, onfocus }) {
+export default function Input({ colorFocused, maxLength, keyboardType, icon, placeholder, autoComplete, color, secureTextEntry, value, onChangeText, onfocus }) {
     
     const [focused, setFocused] = useState({});
 
@@ -20,7 +20,7 @@ export default function Input({ maxLength, keyboardType, icon, placeholder, auto
                 onFocus={ () => {
                     setFocused({
                         borderLeftWidth: 4,
-                        borderColor: '#8257E5',
+                        borderColor: colorFocused || '#8257E5' ,
                         borderBottomLeftRadius: 8,
                     });
                 }}  

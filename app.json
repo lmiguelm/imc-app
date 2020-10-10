@@ -1,13 +1,12 @@
 {
   "expo": {
-    "name": "mmc-app",
-    "slug": "mmc-app",
+    "name": "imc-app",
+    "slug": "imc-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -17,10 +16,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "imc-app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "android": {
+      "package": "com.lmiguelm.imcapp"
     }
   }
 }

@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_700Bold',
         fontSize: 20
     },
+    inputGroup: {
+        marginTop: 35,
+        alignSelf: 'center',
+        width: '90%'
+    }
 });
 
 export default styles;

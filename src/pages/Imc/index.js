@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Slider, ActivityIndicator, BackHandler } from 'react-native';
+import { View, Text } from 'react-native';
 import { ProgressCircle  } from 'react-native-svg-charts';
-import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import {calculateImc, formatImc} from '../../utils/imc';
 import { useImc } from '../../contexts/imc';
 
 import Modalize from '../../components/Modalize';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 import styles from './styles';
 
@@ -25,15 +26,9 @@ export default function Imc() {
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const [enableButton, setEnableButton] = useState(false);
 
     const { navigate } = useNavigation();
-
-    // useEffect(() => {
-    //     BackHandler.addEventListener('hardwareBackPress', () => {
-    //         navigate('Landing');
-    //         return;
-    //     });
-    // }, []);
 
     // imc
     useEffect(() => {
@@ -45,6 +40,14 @@ export default function Imc() {
         setColor(color);
         setTitle(title);
     }, [height, weight]);
+
+    useEffect(() => {
+        if(height == 0 && weight == 0) {
+            setEnableButton(false);
+        } else {
+            setEnableButton(true);
+        }
+    }, [height, weight])
 
     async function handleSaveImc() {
         setLoading(true);
@@ -76,8 +79,7 @@ export default function Imc() {
             <LinearGradient 
                 colors={['#6842C2', '#774DD6', '#8257E5']}
                 style={ styles.container }
-            >
-                        
+            > 
                 <ProgressCircle 
                     style={{ height: 250, width: 250, marginTop: 10  }} 
                     progress={1} 
@@ -104,63 +106,46 @@ export default function Imc() {
                         </Text>
                     </View>
                 </ProgressCircle>
-
-                <View style={ styles.controlsArea }>
-                    <Text style={ styles.label }>
-                        <MaterialCommunityIcons name="human-male-height" size={17} />{' '}
-                        Altura
-                    </Text>
-                    
-                    <View style={ styles.slideContainer }>
-                        <Text style={ [styles.sliderText, {color}] }>     
-                            { height } M
-                        </Text>
-                        <Slider
-                            style={{width: 250, height: 50}}
-                            minimumValue={0}
-                            maximumValue={3}
-                            minimumTrackTintColor={color}
-                            maximumTrackTintColor="#fff"
-                            thumbTintColor={color}
-
-                            value={height}
-                            onValueChange={(value) => setHeight(parseFloat(value.toFixed(2)))}
-                        />
-                    </View>
-
-                    <Text style={ styles.label }>
-                        <MaterialCommunityIcons name="weight-kilogram" size={17} />{' '}
-                        Peso
-                    </Text>
-
-                    <View style={ styles.slideContainer }>
-                        <Text style={ [styles.sliderText, {color}] }> { weight } Kg</Text>
-                        <Slider
-                            style={{width: 250, height: 50}}
-                            minimumValue={0}
-                            maximumValue={300}
-                            minimumTrackTintColor={color}
-                            maximumTrackTintColor="#fff"
-                            thumbTintColor={color }
-
-                            value={weight}
-                            onValueChange={(value) => setWeight(parseInt(value))}
-                        />
-                    </View>
+                            
+                <View style={styles.inputGroup}>
+                    <Input
+                        placeholder="Informe sua altura em metros"
+                        keyboardType="numeric"
+                        colorFocused="#04d361"
+                        maxLength={5}
+                        onChangeText={value => setHeight(value)}
+                        icon={
+                            <MaterialCommunityIcons name="human-male-height" color="#6842C2" size={20} />
+                        }
+                    />
+                    <Input
+                        placeholder="Informe seu peso em Kg"
+                        keyboardType="numeric"
+                        colorFocused="#04d361"
+                        maxLength={5}
+                        onChangeText={value => setWeight(value)}
+                        icon={
+                            <MaterialCommunityIcons name="weight-kilogram" color="#6842C2" size={20} />
+                        }
+                    />
                 </View>
 
-                <View style={ styles.buttonsContainer }>
-                    <RectButton onPress={ handleSaveImc } style={ styles.button } enabled={!loading} >
-                        {!loading ? (
-                            <Text style={ styles.buttonText }>
-                                <AntDesign name="save" size={20} />{' '}
-                                Salvar
-                            </Text>
-
-                        ): (
-                            <ActivityIndicator  size="large" color="#6842C2" />
-                        )}
-                    </RectButton>
+                <View style={[styles.inputGroup, { marginTop: 10 }]}>  
+                    {!loading ? (
+                        <Button
+                            action={handleSaveImc}
+                            text="Salvar"
+                            color="#04D361"
+                            enabled={enableButton}
+                        />
+                    ): (
+                        <Button
+                            action={handleSaveImc}
+                            text="Salvando imc ..."
+                            color="#04D361"
+                            enabled={false}
+                        />
+                    )}
                 </View>
             </LinearGradient>
 
