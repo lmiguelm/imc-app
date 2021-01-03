@@ -1,8 +1,12 @@
 
+
   
 # 🏋️‍♂️ Indice de massa corporal (IMC) - Aplicativo
 
 ![imc-app](.github/imc.gif)
+
+## Download do aplicativo 
+Disponível [aqui](https://drive.google.com/file/d/1B6EczS9ZgC11NKfWYotnM5zQL1x6beFE/view?usp=sharing)
 
 ## 🚀   Tecnologias:
 Esse projeto foi desenvolvido com as seguintes tecnologias:
