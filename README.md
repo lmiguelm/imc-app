@@ -5,7 +5,7 @@
 
 ![imc-app](.github/imc.gif)
 
-## Download do aplicativo 
+## 🔽 Download do aplicativo 
 Disponível [aqui](https://drive.google.com/file/d/1B6EczS9ZgC11NKfWYotnM5zQL1x6beFE/view?usp=sharing)
 
 ## 🚀   Tecnologias:
