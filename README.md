@@ -1,6 +1,6 @@
 
   
-# 🏋️‍♂️ Indice de massa corporal (IMC)
+# 🏋️‍♂️ Indice de massa corporal (IMC) - Aplicativo
 
 ![imc-app](.github/imc.gif)
 
