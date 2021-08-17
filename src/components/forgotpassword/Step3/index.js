@@ -12,141 +12,131 @@ import api from '../../../services/api';
 
 import styles from './styles';
 
-export default function Step2({callback, userId}) {
+export default function Step2({ callback, userId }) {
+  const { navigate } = useNavigation();
 
-    const { navigate } = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [enableButton, setEnableButton] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modal, setModal] = useState({});
 
-    const [loading, setLoading] = useState(false);
-    const [enableButton, setEnableButton] = useState(false);
-    const [password, setPassword]  = useState('');
-    const [confirmPassword, setConfirmPassword]  = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [modal, setModal] = useState({});
-
-    useEffect(() => {
-        if(password.length >= 5 && confirmPassword === password) {
-            setEnableButton(true);
-        } else {
-            setEnableButton(false);
-        }
-    }, [password, confirmPassword]);
-
-    function goToForgotPasswordPage() {
-        console.log('ok');
-        navigate('ForgotPassword');
+  useEffect(() => {
+    if (password.length >= 5 && confirmPassword === password) {
+      setEnableButton(true);
+    } else {
+      setEnableButton(false);
     }
+  }, [password, confirmPassword]);
 
-    async function changePassword() {
-        setLoading(true);
+  function goToForgotPasswordPage() {
+    console.log('ok');
+    navigate('ForgotPassword');
+  }
 
-        try {
-            await api.post(`/auth/resetPassword`, {
-                password,
-                id: userId
-            });
-            callback(1);
-            navigate('Feedback', { 
-                title: 'Senha alterada com sucesso!',
-                text: 'Agora é só voltar e fazer seu login novamente. :)',
-                textButton: 'Fazer login',
-                navigate: () => navigate('Login')
-            });
-        } catch (e) {
-            setLoading(false);
-            setModal({
-                color: '#ff0000',
-                text: e.response.data.message,
-                icon: 'error'
-            });
-            setShowModal(true);
-        } 
+  async function changePassword() {
+    setLoading(true);
+
+    try {
+      await api.post(`/auth/resetPassword`, {
+        password,
+        id: userId,
+      });
+      callback(1);
+      navigate('Feedback', {
+        title: 'Senha alterada com sucesso!',
+        text: 'Agora é só voltar e fazer seu login novamente. :)',
+        textButton: 'Fazer login',
+        navigate: () => navigate('Login'),
+      });
+    } catch (e) {
+      setLoading(false);
+      setModal({
+        color: '#ff0000',
+        text: e.response.data.message,
+        icon: 'error',
+      });
+      setShowModal(true);
     }
+  }
 
-    function goBack() {
-        callback(1);
-    }
+  function goBack() {
+    callback(1);
+  }
 
-    return(
-        <>
-            <View style={styles.container}>
-                <View style={ styles.header }>
-                    <BorderlessButton onPress={goBack}>
-                        <Ionicons name="md-arrow-round-back" size={24} color="#32264D" />
-                    </BorderlessButton>
-                    
-                    
-                    <View style={ styles.progress }>
-                        <FontAwesome name="circle-o" style={{ marginRight: 20 }} size={13} color="#32264D" />
-                        <FontAwesome name="circle" size={13} color="#32264D" />
-                    </View>
-                </View>
+  return (
+    <>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <BorderlessButton onPress={goBack}>
+            <Ionicons name="arrow-back-outline" size={24} color="#32264D" />
+          </BorderlessButton>
 
-                <View style={ styles.content}> 
-                    <Text style={ styles.title }>
-                    Quase lá... 
-                    </Text>
+          <View style={styles.progress}>
+            <FontAwesome name="circle-o" style={{ marginRight: 20 }} size={13} color="#32264D" />
+            <FontAwesome name="circle" size={13} color="#32264D" />
+          </View>
+        </View>
 
-                    <Text style={ styles.text }>
-                        Informe sua nova senha. Lembrando que a senha deve conter no minímo
-                        5 caracteres.
-                    </Text>
-                </View>
+        <View style={styles.content}>
+          <Text style={styles.title}>Quase lá...</Text>
 
-                <View style={styles.inputGroup}>
-                    <Input
-                        placeholder="Informe a nova senha"
-                        value={password}
-                        secureTextEntry={!showPassword}
-                        onChangeText={value => setPassword(value)}  
-                        icon={
-                            <BorderlessButton onPress={ () => setShowPassword(!showPassword) }>    
-                                { showPassword ? (
-                                    <Entypo name="eye-with-line" size={20} color="#774DD6" />
-                                    ): (
-                                    <Entypo style={ styles.icon } name="eye" size={20} color="#c1bccc" />
-                                )}
-                            </BorderlessButton>   
-                        } 
-                    />
+          <Text style={styles.text}>
+            Informe sua nova senha. Lembrando que a senha deve conter no minímo 5 caracteres.
+          </Text>
+        </View>
 
-                    <Input
-                        placeholder="Digite novamente"
-                        secureTextEntry={!showPassword}
-                        value={confirmPassword}
-                        onChangeText={value => setConfirmPassword(value)} 
-                        icon={
-                            <BorderlessButton onPress={ () => setShowPassword(!showPassword) }>    
-                                { showPassword ? (
-                                    <Entypo name="eye-with-line" size={20} color="#774DD6" />
-                                    ): (
-                                    <Entypo style={ styles.icon } name="eye" size={20} color="#c1bccc" />
-                                )}
-                            </BorderlessButton>   
-                        }  
-                    />
+        <View style={styles.inputGroup}>
+          <Input
+            placeholder="Informe a nova senha"
+            value={password}
+            secureTextEntry={!showPassword}
+            onChangeText={(value) => setPassword(value)}
+            icon={
+              <BorderlessButton onPress={() => setShowPassword(!showPassword)}>
+                {showPassword ? (
+                  <Entypo name="eye-with-line" size={20} color="#774DD6" />
+                ) : (
+                  <Entypo style={styles.icon} name="eye" size={20} color="#c1bccc" />
+                )}
+              </BorderlessButton>
+            }
+          />
 
-                    {!loading ? (
-                        <Button
-                            text="Confirmar"
-                            enabled={enableButton}
-                            color="#774DD6"
-                            action={changePassword}
-                        />
-                    ):(
-                        <Button>
-                            <ActivityIndicator  size="large" color="#6842C2" />
-                        </Button>
-                    )}
+          <Input
+            placeholder="Digite novamente"
+            secureTextEntry={!showPassword}
+            value={confirmPassword}
+            onChangeText={(value) => setConfirmPassword(value)}
+            icon={
+              <BorderlessButton onPress={() => setShowPassword(!showPassword)}>
+                {showPassword ? (
+                  <Entypo name="eye-with-line" size={20} color="#774DD6" />
+                ) : (
+                  <Entypo style={styles.icon} name="eye" size={20} color="#c1bccc" />
+                )}
+              </BorderlessButton>
+            }
+          />
 
-                </View>
-            </View>
-
-            <Modalize
-                open={ showModal }
-                callback={ res => setShowModal(res) } 
-                modal={ modal }
+          {!loading ? (
+            <Button
+              text="Confirmar"
+              enabled={enableButton}
+              color="#774DD6"
+              action={changePassword}
             />
-        </>
-    );
+          ) : (
+            <Button>
+              <ActivityIndicator size="large" color="#6842C2" />
+            </Button>
+          )}
+        </View>
+      </View>
+
+      <Modalize open={showModal} callback={(res) => setShowModal(res)} modal={modal} />
+    </>
+  );
 }
